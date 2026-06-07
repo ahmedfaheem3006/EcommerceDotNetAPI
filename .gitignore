@@ -1,0 +1,33 @@
+## .NET Core/.NET 8
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.pidb
+*.cache
+*.dll
+*.exe
+*.pdb
+
+## IDE
+.idea/
+*.swp
+*.swo
+*~
+
+## EF Core Migrations (keep in source control usually, but uncomment if needed)
+# */Migrations/
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Env
+*.env
+.env.*
+!env.example
+
+## Logs
+*.log
+logs/
