@@ -38,13 +38,16 @@ namespace ECommerce.API.Extensions
         }
     }
 
-    public static class RoleManagerExtensions
+    public static class IdentityDataSeeder
     {
         /// <summary>
-        /// Seed default roles on startup
+        /// Seed default roles and default Admin user on startup
         /// </summary>
-        public static async Task SeedRolesAsync(this RoleManager<IdentityRole> roleManager)
+        public static async Task SeedDataAsync(this IServiceProvider serviceProvider)
         {
+            var roleManager = serviceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<ApplicationUser>>();
+
             string[] roles = { "Admin", "Manager", "User" };
 
             foreach (var role in roles)
@@ -52,6 +55,26 @@ namespace ECommerce.API.Extensions
                 if (!await roleManager.RoleExistsAsync(role))
                 {
                     await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            string adminEmail = "admin@ecommerce.com";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+            if (adminUser == null)
+            {
+                adminUser = new ApplicationUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    FirstName = "System",
+                    LastName = "Admin",
+                    EmailConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(adminUser, "Admin@123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
             }
         }

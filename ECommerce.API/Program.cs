@@ -190,12 +190,11 @@ builder.Services.AddOpenApi(options =>
 var app = builder.Build();
 
 // ========================
-// Seed default roles (Admin, Manager, User) on startup
+// Seed default roles and Admin user on startup
 // ========================
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    await roleManager.SeedRolesAsync();
+    await scope.ServiceProvider.SeedDataAsync();
 }
 
 // ========================
